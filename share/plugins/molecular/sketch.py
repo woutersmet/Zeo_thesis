@@ -151,6 +151,8 @@ class SketchOptions(GladeWrapper):
             "sketch_quickpicks",
             [6,7,8,9,10,11],
         )
+        #WOUTER I messed up this setting and now Zeobuilder keeps crashing cause it was set to empty
+        config.sketch_quickpicks = [6,7,8,9,10,11]
 
         # 5)create the "quick pick" atom buttons
         for index in xrange(len(config.sketch_quickpicks)):
