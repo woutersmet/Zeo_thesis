@@ -167,22 +167,22 @@ class SketchOptions(GladeWrapper):
             # add to hbox
             self.hbox_quickpicks.pack_start(bu_element)
             bu_element.show()
-            
+
         # 6)fill the fragment combo box with filenames from share/fragments
         fragmentdir = context.get_share_filename('fragments')
         self.fragment_store = gtk.ListStore(str)
         for filename in os.listdir (fragmentdir):
-            # Ignore subfolders
-            if os.path.isdir (os.path.join (fragmentdir, filename)):
+            # Ignore subfolders and files with extension other than cml
+            if os.path.isdir (os.path.join (fragmentdir, filename)) or filename[-3:] != 'cml':
                 continue
             self.fragment_store.append([filename[:-4]])
         self.cb_fragment.set_model(self.fragment_store)
-             
+
         renderer_text = gtk.CellRendererText()
         self.cb_fragment.pack_start(renderer_text, expand=True)
         self.cb_fragment.add_attribute(renderer_text, "text", 0)
-        self.cb_fragment.set_active(0)          
-             
+        self.cb_fragment.set_active(0)
+
     def on_window_delete_event(self, window, event):
         return True
 
@@ -224,19 +224,32 @@ class SketchOptions(GladeWrapper):
 
     def get_new(self, state={}):
         object_type = self.object_store.get_value(self.cb_object.get_active_iter(), 0)
+        print object_type
 
         new = context.application.plugins.get_node(object_type)()
+
         #if it's an 'Atom', set the atom number to the current atom number?
         if object_type == "Atom":
             new.set_number(self.atom_number)
             new.set_name(periodic[self.atom_number].symbol)
+        #if it's a 'Fragment', set fragment name to current item in combo box
+        if object_type == "Fragment":
+            self.doing_fragment = True
+            print "it's a fragment!"
+            print "Detected fragment name: "+self.fragment_store.get_value(self.cb_fragment.get_active_iter(),0)
+            new.set_name(self.fragment_store.get_value(self.cb_fragment.get_active_iter(),0))
+
         return new
 
     def add_new(self, position, parent):
         new = self.get_new()
-        new.transformation.t[:] = position
-        primitive.Add(new, parent)
-        return new
+        if self.doing_fragment:
+            new.transformation.t[:] = position
+            pass  #WOUTER don't wanna implement positioning yet for fragments, lets just try adding a bunch of atoms
+        else:
+            new.transformation.t[:] = position
+            primitive.Add(new, parent)
+            return new
 
     def replace(self, gl_object):
         if not gl_object.get_fixed():

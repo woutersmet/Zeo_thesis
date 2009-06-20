@@ -91,35 +91,36 @@ class FileImport(Immediate):
     repeatable = False
     authors = [authors.toon_verstraelen]
 
+    def file_import(self,filename):
+        tmp_model = Model()
+        tmp_model.file_open(filename)
+
+        if len(tmp_model.universe.children) > 0:
+            Frame = context.application.plugins.get_node("Frame")
+            root_frame = Frame(name=os.path.basename(filename))
+            tmp = copy.copy(tmp_model.universe.children)
+            while len(tmp_model.universe.children) > 0:
+                tmp_model.universe.remove(tmp_model.universe.children[0])
+            for node in tmp:
+                root_frame.add(node)
+            del tmp
+            context.application.model.universe.add(root_frame)
+
+        if len(tmp_model.folder.children) > 0:
+            Folder = context.application.plugins.get_node("Folder")
+            root_folder = Folder(name=os.path.basename(filename))
+            tmp = copy.copy(tmp_model.folder.children)
+            while len(tmp_model.folder.children) > 0:
+                tmp_model.universe.remove(tmp_model.folder.children[0])
+            for node in tmp:
+                root_folder.add(node)
+            del tmp
+            context.application.model.folder.add(root_folder)
+            tmp_model.file_close()
+
     def do(self):
-        def file_import(filename):
-            tmp_model = Model()
-            tmp_model.file_open(filename)
-
-            if len(tmp_model.universe.children) > 0:
-                Frame = context.application.plugins.get_node("Frame")
-                root_frame = Frame(name=os.path.basename(filename))
-                tmp = copy.copy(tmp_model.universe.children)
-                while len(tmp_model.universe.children) > 0:
-                    tmp_model.universe.remove(tmp_model.universe.children[0])
-                for node in tmp:
-                    root_frame.add(node)
-                del tmp
-                context.application.model.universe.add(root_frame)
-
-            if len(tmp_model.folder.children) > 0:
-                Folder = context.application.plugins.get_node("Folder")
-                root_folder = Folder(name=os.path.basename(filename))
-                tmp = copy.copy(tmp_model.folder.children)
-                while len(tmp_model.folder.children) > 0:
-                    tmp_model.universe.remove(tmp_model.folder.children[0])
-                for node in tmp:
-                    root_folder.add(node)
-                del tmp
-                context.application.model.folder.add(root_folder)
-                tmp_model.file_close()
-
-        run_file_dialog(context.application.file_import_dialog, file_import)
+        print "Doing file import action"
+        run_file_dialog(context.application.file_import_dialog, self.file_import)
 
 
 class FileExport(Immediate):
