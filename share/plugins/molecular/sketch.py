@@ -239,12 +239,11 @@ class SketchOptions(GladeWrapper):
             print "Detected fragment name: "+self.fragment_store.get_value(self.cb_fragment.get_active_iter(),0)
             new.set_name(self.fragment_store.get_value(self.cb_fragment.get_active_iter(),0))
 
-        return new
-
     def add_new(self, position, parent):
         new = self.get_new()
         if self.doing_fragment:
-            new.transformation.t[:] = position
+            AddFragment = context.application.plugins.get_action("AddFragment")
+            AddFragment()
             pass  #WOUTER don't wanna implement positioning yet for fragments, lets just try adding a bunch of atoms
         else:
             new.transformation.t[:] = position

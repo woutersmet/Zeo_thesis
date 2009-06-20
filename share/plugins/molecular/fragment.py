@@ -79,6 +79,9 @@ class AddFragment(AddBase):
     menu_info = MenuInfo("default/_Object:tools/_Add:3d", "_Fragment", image_name="plugins/basic/tetra.svg", order=(0, 4, 1, 0, 0, 7))
     authors = [authors.toon_verstraelen]
 
+    def set_name(self,name):
+        self.name = name
+
     @staticmethod
     def analyze_selection():
         # A) calling ancestor
@@ -131,7 +134,7 @@ nodes = {
 }
 
 actions = {
-    "addFragment": AddFragment
+    "AddFragment": AddFragment
 
 }
 
