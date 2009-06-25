@@ -183,6 +183,8 @@ class SketchOptions(GladeWrapper):
         self.cb_fragment.add_attribute(renderer_text, "text", 0)
         self.cb_fragment.set_active(0)
 
+        self.doing_fragment = False #at init we do atoms :)
+
     def on_window_delete_event(self, window, event):
         return True
 
@@ -235,12 +237,16 @@ class SketchOptions(GladeWrapper):
         #if it's a 'Fragment', set fragment name to current item in combo box
         if object_type == "Fragment":
             self.doing_fragment = True
-            print "it's a fragment!"
-            print "Detected fragment name: "+self.fragment_store.get_value(self.cb_fragment.get_active_iter(),0)
             new.set_name(self.fragment_store.get_value(self.cb_fragment.get_active_iter(),0))
 
+        return new
+
     def add_new(self, position, parent):
+        print "position:"
+        print position
+
         new = self.get_new()
+        print new
         if self.doing_fragment:
             AddFragment = context.application.plugins.get_action("AddFragment")
             AddFragment()

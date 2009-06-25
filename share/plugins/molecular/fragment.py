@@ -91,43 +91,35 @@ class AddFragment(AddBase):
         # C) passed all tests:
         return True
 
-    def do(self):
+    def do(self,Fragment = False):
         print "Adding fragment..."
 
-        #FileImport = context.application.plugins.get_action("FileImport")()
-        #print FileImport
+        if Fragment:
+            fragmentname = Fragment.name #'ammonium'
+        else:
+            fragmentname = 'ammonium'
         fragmentdir = context.get_share_filename('fragments')
-
-        fragmentname = 'ammonium'
         filename = fragmentdir+'/'+fragmentname+'.cml'
 
-        #stolen from file.py    def file_import(self,filename):
-        tmp_model = Model()
-        tmp_model.file_open(filename)
+        from molmod.io.cml import load_cml
+        molecules = load_cml(filename)
+        molecule = molecules[0] #we only look at first molecule in the list
 
-        #same precautions as import? remove all universe children and folder content before copying?
-        if len(tmp_model.universe.children) > 0:
-            Frame = context.application.plugins.get_node("Frame")
-            root_frame = Frame(name=os.path.basename(filename))
-            tmp = copy.copy(tmp_model.universe.children)
-            while len(tmp_model.universe.children) > 0:
-                tmp_model.universe.remove(tmp_model.universe.children[0])
-            for node in tmp:
-                root_frame.add(node)
-            del tmp
-            context.application.model.universe.add(root_frame)
+        #load 'universe' from file trough cml load filter (stolen from models.py > file_open)
+        load_filter = context.application.plugins.get_load_filter('cml')
 
-        if len(tmp_model.folder.children) > 0:
-            Folder = context.application.plugins.get_node("Folder")
-            root_folder = Folder(name=os.path.basename(filename))
-            tmp = copy.copy(tmp_model.folder.children)
-            while len(tmp_model.folder.children) > 0:
-                tmp_model.universe.remove(tmp_model.folder.children[0])
-            for node in tmp:
-                root_folder.add(node)
-            del tmp
-            context.application.model.folder.add(root_folder)
-            tmp_model.file_close()
+        #create frame
+        Frame = context.application.plugins.get_node("Frame")
+        fragment_frame = Frame(name=os.path.basename(filename)[:-4])
+
+        #fill frame with molecule
+        load_filter.load_molecule(fragment_frame,molecule)
+
+        #apply transformation to frame
+
+        #add to model
+        context.application.model.universe.add(fragment_frame)
+
 
 nodes = {
     "Fragment": Fragment,
