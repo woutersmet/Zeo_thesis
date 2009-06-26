@@ -249,7 +249,8 @@ class SketchOptions(GladeWrapper):
         print new
         if self.doing_fragment:
             AddFragment = context.application.plugins.get_action("AddFragment")
-            AddFragment()
+            addfragment = AddFragment(new)
+            addfragment.do(position)
             pass  #WOUTER don't wanna implement positioning yet for fragments, lets just try adding a bunch of atoms
         else:
             new.transformation.t[:] = position

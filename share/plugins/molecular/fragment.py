@@ -61,13 +61,6 @@ class Fragment(GLGeometricBase, UserColorMixin):
         print "new fragment object created"
         self.name = 'ammonium'
 
-    #
-    # State
-    #
-
-    def initnonstate(self):
-        GLGeometricBase.initnonstate(self, Translation)
-
     def set_name(self,name):
         self.name = name
 
@@ -78,6 +71,14 @@ class AddFragment(AddBase):
     description = "Add fragment"
     menu_info = MenuInfo("default/_Object:tools/_Add:3d", "_Fragment", image_name="plugins/basic/tetra.svg", order=(0, 4, 1, 0, 0, 7))
     authors = [authors.toon_verstraelen]
+
+    def __init__(self,fragment = False):
+        if fragment:
+            self.name = fragment.name
+        else:
+            self.name = 'ammonium'
+        print "initialized..."
+        print self.name
 
     def set_name(self,name):
         self.name = name
@@ -91,13 +92,11 @@ class AddFragment(AddBase):
         # C) passed all tests:
         return True
 
-    def do(self,Fragment = False):
-        print "Adding fragment..."
+    def do(self,position):
+        print 'adding fragment...'
+        print self.name
+        fragmentname = self.name  #'ammonium'
 
-        if Fragment:
-            fragmentname = Fragment.name #'ammonium'
-        else:
-            fragmentname = 'ammonium'
         fragmentdir = context.get_share_filename('fragments')
         filename = fragmentdir+'/'+fragmentname+'.cml'
 
@@ -116,6 +115,7 @@ class AddFragment(AddBase):
         load_filter.load_molecule(fragment_frame,molecule)
 
         #apply transformation to frame
+        fragment_frame.transformation.t[:] = position
 
         #add to model
         context.application.model.universe.add(fragment_frame)
