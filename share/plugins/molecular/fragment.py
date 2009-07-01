@@ -60,45 +60,35 @@ class Fragment(GLGeometricBase, UserColorMixin):
     def __init__(self):
         print "new fragment object created"
         self.name = 'ammonium'
+        self.transformation = "BOE!"
 
     def set_name(self,name):
         self.name = name
+
+
+    def getTransformation(self):
+        print "getting transformation!"
+        return self.fragment_frame.transformation.t[:]
+        #return self.transformation #-> infinite recursion so that's not good
+
+    def setTransformation(self,transformation):
+        print "setting transformation!"
+
+    #transformation property is more complicated than with point object nodes
+    # so we override its getter and setter
+    transformation = property(getTransformation,
+                                setTransformation)
 
     def load_fragment(self): #read file from self.name into molecule object
         pass
 
-class AddFragment(AddBase):
-    description = "Add fragment"
-    menu_info = MenuInfo("default/_Object:tools/_Add:3d", "_Fragment", image_name="plugins/basic/tetra.svg", order=(0, 4, 1, 0, 0, 7))
-    authors = [authors.toon_verstraelen]
 
-    def __init__(self,fragment = False):
-        if fragment:
-            self.name = fragment.name
-        else:
-            self.name = 'ammonium'
-        print "initialized..."
-        print self.name
-
-    def set_name(self,name):
-        self.name = name
-
-    @staticmethod
-    def analyze_selection():
-        # A) calling ancestor
-        if not Immediate.analyze_selection(): return False
-        # B) validating
-
-        # C) passed all tests:
-        return True
-
-    def do(self,position):
-        print 'adding fragment...'
-        print self.name
-        fragmentname = self.name  #'ammonium'
+    def addToModel(self,position=[0,0,0],parent=None):
+        if parent is None:
+            parent = context.application.model.universe
 
         fragmentdir = context.get_share_filename('fragments')
-        filename = fragmentdir+'/'+fragmentname+'.cml'
+        filename = fragmentdir+'/'+self.name+'.cml'
 
         from molmod.io.cml import load_cml
         molecules = load_cml(filename)
@@ -109,16 +99,36 @@ class AddFragment(AddBase):
 
         #create frame
         Frame = context.application.plugins.get_node("Frame")
-        fragment_frame = Frame(name=os.path.basename(filename)[:-4])
+        self.fragment_frame = Frame(name=self.name)
 
         #fill frame with molecule
-        load_filter.load_molecule(fragment_frame,molecule)
+        load_filter.load_molecule(self.fragment_frame,molecule)
 
         #apply transformation to frame
-        fragment_frame.transformation.t[:] = position
+        self.fragment_frame.transformation.t[:] = position
 
-        #add to model
-        context.application.model.universe.add(fragment_frame)
+        #add to model (note: should add to parent frame, not universe)
+        primitive.Add(self.fragment_frame, parent)
+
+class AddFragment(AddBase):
+    description = "Add fragment"
+    menu_info = MenuInfo("default/_Object:tools/_Add:3d", "_Fragment", image_name="plugins/basic/tetra.svg", order=(0, 4, 1, 0, 0, 7))
+    authors = [authors.toon_verstraelen]
+
+    @staticmethod
+    def analyze_selection():
+        # A) calling ancestor
+        if not Immediate.analyze_selection(): return False
+        # B) validating
+
+        # C) passed all tests:
+        return True
+
+    def do(self):
+        print "doing addfragment action.."
+        fragment = context.application.plugins.get_node("Fragment")()
+        fragment.set_name('ammonium')
+        fragment.addToModel()
 
 
 nodes = {

@@ -174,142 +174,133 @@
         <property name="column_spacing">6</property>
         <property name="row_spacing">6</property>
         <child>
-          <widget class="GtkComboBox" id="cb_fragment">
-          </widget>
-          <packing>
-            <property name="left_attach">3</property>
-            <property name="right_attach">4</property>
-            <property name="top_attach">3</property>
-            <property name="bottom_attach">4</property>
-          </packing>
+          <placeholder/>
         </child>
         <child>
-          <widget class="GtkLabel" id="la_fragment">
-            <property name="label" translatable="yes">Pick fragment:</property>
-          </widget>
-          <packing>
-            <property name="left_attach">2</property>
-            <property name="right_attach">3</property>
-            <property name="top_attach">3</property>
-            <property name="bottom_attach">4</property>
-          </packing>
+          <placeholder/>
         </child>
         <child>
-          <widget class="GtkComboBox" id="cb_bondtype">
+          <placeholder/>
+        </child>
+        <child>
+          <placeholder/>
+        </child>
+        <child>
+          <placeholder/>
+        </child>
+        <child>
+          <placeholder/>
+        </child>
+        <child>
+          <placeholder/>
+        </child>
+        <child>
+          <placeholder/>
+        </child>
+        <child>
+          <placeholder/>
+        </child>
+        <child>
+          <widget class="GtkHBox" id="hbox_fragments">
             <property name="visible">True</property>
-          </widget>
-          <packing>
-            <property name="left_attach">3</property>
-            <property name="right_attach">4</property>
-            <property name="top_attach">4</property>
-            <property name="bottom_attach">5</property>
-          </packing>
-        </child>
-        <child>
-          <placeholder/>
-        </child>
-        <child>
-          <placeholder/>
-        </child>
-        <child>
-          <placeholder/>
-        </child>
-        <child>
-          <placeholder/>
-        </child>
-        <child>
-          <placeholder/>
-        </child>
-        <child>
-          <placeholder/>
-        </child>
-        <child>
-          <placeholder/>
-        </child>
-        <child>
-          <placeholder/>
-        </child>
-        <child>
-          <placeholder/>
-        </child>
-        <child>
-          <widget class="GtkComboBox" id="cb_vector">
-            <property name="visible">True</property>
-            <signal name="changed" handler="on_cb_vector_changed"/>
-          </widget>
-          <packing>
-            <property name="left_attach">2</property>
-            <property name="right_attach">3</property>
-            <property name="top_attach">4</property>
-            <property name="bottom_attach">5</property>
-            <property name="y_options"></property>
-          </packing>
-        </child>
-        <child>
-          <widget class="GtkLabel" id="la_connectwith">
-            <property name="visible">True</property>
-            <property name="xalign">0</property>
-            <property name="label" translatable="yes" context="yes">Connect with</property>
-            <property name="use_markup">True</property>
-          </widget>
-          <packing>
-            <property name="left_attach">1</property>
-            <property name="right_attach">2</property>
-            <property name="top_attach">4</property>
-            <property name="bottom_attach">5</property>
-            <property name="x_options">GTK_FILL</property>
-            <property name="y_options"></property>
-          </packing>
-        </child>
-        <child>
-          <widget class="GtkLabel" id="la_eraseoptions">
-            <property name="visible">True</property>
-            <property name="xalign">0</property>
-            <property name="label" translatable="yes" context="yes">&lt;b&gt;Erase options&lt;/b&gt; (right button)</property>
-            <property name="use_markup">True</property>
-          </widget>
-          <packing>
-            <property name="right_attach">3</property>
-            <property name="top_attach">5</property>
-            <property name="bottom_attach">6</property>
-            <property name="x_options">GTK_FILL</property>
-            <property name="y_options"></property>
-          </packing>
-        </child>
-        <child>
-          <widget class="GtkCheckButton" id="cb_erase_filter">
-            <property name="visible">True</property>
-            <property name="can_focus">True</property>
-            <property name="label" translatable="yes" context="yes">Erase filter</property>
-            <property name="use_underline">True</property>
-            <property name="response_id">0</property>
-            <property name="draw_indicator">True</property>
-          </widget>
-          <packing>
-            <property name="left_attach">1</property>
-            <property name="right_attach">2</property>
-            <property name="top_attach">6</property>
-            <property name="bottom_attach">7</property>
-          </packing>
-        </child>
-        <child>
-          <widget class="GtkButton" id="bu_edit_erase_filter">
-            <property name="visible">True</property>
-            <property name="can_focus">True</property>
-            <property name="response_id">0</property>
-            <signal name="clicked" handler="on_bu_edit_erase_filter_clicked"/>
             <child>
-              <widget class="GtkImage" id="image1">
+              <widget class="GtkLabel" id="la_fragment">
                 <property name="visible">True</property>
-                <property name="stock">gtk-index</property>
+                <property name="label" translatable="yes">Pick a fragment:</property>
               </widget>
+            </child>
+            <child>
+              <widget class="GtkComboBox" id="cb_fragment">
+              </widget>
+              <packing>
+                <property name="position">1</property>
+              </packing>
             </child>
           </widget>
           <packing>
             <property name="left_attach">2</property>
+            <property name="right_attach">4</property>
+            <property name="top_attach">3</property>
+            <property name="bottom_attach">4</property>
+          </packing>
+        </child>
+        <child>
+          <widget class="GtkHBox" id="hbox2">
+            <property name="visible">True</property>
+            <child>
+              <widget class="GtkLabel" id="la_current">
+                <property name="visible">True</property>
+                <property name="label" translatable="yes" context="yes">Current: C</property>
+              </widget>
+            </child>
+            <child>
+              <widget class="GtkComboBox" id="cb_group">
+              </widget>
+              <packing>
+                <property name="position">1</property>
+              </packing>
+            </child>
+          </widget>
+          <packing>
+            <property name="left_attach">3</property>
+            <property name="right_attach">4</property>
+            <property name="top_attach">1</property>
+            <property name="bottom_attach">2</property>
+          </packing>
+        </child>
+        <child>
+          <widget class="GtkLabel" id="label72">
+            <property name="visible">True</property>
+            <property name="xalign">0</property>
+            <property name="label" translatable="yes" context="yes">Add new</property>
+            <property name="use_markup">True</property>
+          </widget>
+          <packing>
+            <property name="left_attach">1</property>
+            <property name="right_attach">2</property>
+            <property name="top_attach">1</property>
+            <property name="bottom_attach">2</property>
+            <property name="x_options">GTK_FILL</property>
+            <property name="y_options"></property>
+          </packing>
+        </child>
+        <child>
+          <widget class="GtkLabel" id="label79">
+            <property name="visible">True</property>
+            <property name="xalign">0</property>
+            <property name="label" translatable="yes" context="yes">&lt;b&gt;Draw options&lt;/b&gt; (left button)</property>
+            <property name="use_markup">True</property>
+          </widget>
+          <packing>
             <property name="right_attach">3</property>
-            <property name="top_attach">6</property>
-            <property name="bottom_attach">7</property>
+            <property name="x_options">GTK_FILL</property>
+            <property name="y_options"></property>
+          </packing>
+        </child>
+        <child>
+          <widget class="GtkComboBox" id="cb_object">
+            <property name="visible">True</property>
+            <signal name="changed" handler="on_cb_object_changed"/>
+          </widget>
+          <packing>
+            <property name="left_attach">2</property>
+            <property name="right_attach">3</property>
+            <property name="top_attach">1</property>
+            <property name="bottom_attach">2</property>
+            <property name="y_options"></property>
+          </packing>
+        </child>
+        <child>
+          <widget class="GtkLabel" id="label80">
+            <property name="width_request">18</property>
+            <property name="visible">True</property>
+            <property name="xalign">0</property>
+          </widget>
+          <packing>
+            <property name="top_attach">1</property>
+            <property name="bottom_attach">2</property>
+            <property name="x_options">GTK_FILL</property>
+            <property name="y_options"></property>
           </packing>
         </child>
         <child>
@@ -360,82 +351,94 @@
           </packing>
         </child>
         <child>
-          <widget class="GtkLabel" id="label80">
-            <property name="width_request">18</property>
+          <widget class="GtkButton" id="bu_edit_erase_filter">
             <property name="visible">True</property>
-            <property name="xalign">0</property>
-          </widget>
-          <packing>
-            <property name="top_attach">1</property>
-            <property name="bottom_attach">2</property>
-            <property name="x_options">GTK_FILL</property>
-            <property name="y_options"></property>
-          </packing>
-        </child>
-        <child>
-          <widget class="GtkComboBox" id="cb_object">
-            <property name="visible">True</property>
-            <signal name="changed" handler="on_cb_object_changed"/>
+            <property name="can_focus">True</property>
+            <property name="response_id">0</property>
+            <signal name="clicked" handler="on_bu_edit_erase_filter_clicked"/>
+            <child>
+              <widget class="GtkImage" id="image1">
+                <property name="visible">True</property>
+                <property name="stock">gtk-index</property>
+              </widget>
+            </child>
           </widget>
           <packing>
             <property name="left_attach">2</property>
             <property name="right_attach">3</property>
-            <property name="top_attach">1</property>
-            <property name="bottom_attach">2</property>
-            <property name="y_options"></property>
+            <property name="top_attach">6</property>
+            <property name="bottom_attach">7</property>
           </packing>
         </child>
         <child>
-          <widget class="GtkLabel" id="label79">
+          <widget class="GtkCheckButton" id="cb_erase_filter">
+            <property name="visible">True</property>
+            <property name="can_focus">True</property>
+            <property name="label" translatable="yes" context="yes">Erase filter</property>
+            <property name="use_underline">True</property>
+            <property name="response_id">0</property>
+            <property name="draw_indicator">True</property>
+          </widget>
+          <packing>
+            <property name="left_attach">1</property>
+            <property name="right_attach">2</property>
+            <property name="top_attach">6</property>
+            <property name="bottom_attach">7</property>
+          </packing>
+        </child>
+        <child>
+          <widget class="GtkLabel" id="la_eraseoptions">
             <property name="visible">True</property>
             <property name="xalign">0</property>
-            <property name="label" translatable="yes" context="yes">&lt;b&gt;Draw options&lt;/b&gt; (left button)</property>
+            <property name="label" translatable="yes" context="yes">&lt;b&gt;Erase options&lt;/b&gt; (right button)</property>
             <property name="use_markup">True</property>
           </widget>
           <packing>
             <property name="right_attach">3</property>
+            <property name="top_attach">5</property>
+            <property name="bottom_attach">6</property>
             <property name="x_options">GTK_FILL</property>
             <property name="y_options"></property>
           </packing>
         </child>
         <child>
-          <widget class="GtkLabel" id="label72">
+          <widget class="GtkLabel" id="la_connectwith">
             <property name="visible">True</property>
             <property name="xalign">0</property>
-            <property name="label" translatable="yes" context="yes">Add new</property>
+            <property name="label" translatable="yes" context="yes">Connect with</property>
             <property name="use_markup">True</property>
           </widget>
           <packing>
             <property name="left_attach">1</property>
             <property name="right_attach">2</property>
-            <property name="top_attach">1</property>
-            <property name="bottom_attach">2</property>
+            <property name="top_attach">4</property>
+            <property name="bottom_attach">5</property>
             <property name="x_options">GTK_FILL</property>
             <property name="y_options"></property>
           </packing>
         </child>
         <child>
-          <widget class="GtkHBox" id="hbox2">
+          <widget class="GtkComboBox" id="cb_vector">
             <property name="visible">True</property>
-            <child>
-              <widget class="GtkLabel" id="la_current">
-                <property name="visible">True</property>
-                <property name="label" translatable="yes" context="yes">Current: C</property>
-              </widget>
-            </child>
-            <child>
-              <widget class="GtkComboBox" id="cb_group">
-              </widget>
-              <packing>
-                <property name="position">1</property>
-              </packing>
-            </child>
+            <signal name="changed" handler="on_cb_vector_changed"/>
+          </widget>
+          <packing>
+            <property name="left_attach">2</property>
+            <property name="right_attach">3</property>
+            <property name="top_attach">4</property>
+            <property name="bottom_attach">5</property>
+            <property name="y_options"></property>
+          </packing>
+        </child>
+        <child>
+          <widget class="GtkComboBox" id="cb_bondtype">
+            <property name="visible">True</property>
           </widget>
           <packing>
             <property name="left_attach">3</property>
             <property name="right_attach">4</property>
-            <property name="top_attach">1</property>
-            <property name="bottom_attach">2</property>
+            <property name="top_attach">4</property>
+            <property name="bottom_attach">5</property>
           </packing>
         </child>
       </widget>

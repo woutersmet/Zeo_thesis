@@ -83,6 +83,7 @@ class SketchOptions(GladeWrapper):
             "cb_bondtype",
             "hbox_atoms",
             "hbox_quickpicks",
+            "hbox_fragments",
             "la_fragment",
             "cb_fragment"
         ])
@@ -205,12 +206,14 @@ class SketchOptions(GladeWrapper):
         # When the selected object is an atom, show the extra button.
         self.hbox_atoms.hide()
         self.la_current.hide()
+        self.hbox_fragments.hide()
         if(self.object_store.get_value(self.cb_object.get_active_iter(),0)=="Atom"):
             self.hbox_atoms.show()
             self.la_current.show()
         if(self.object_store.get_value(self.cb_object.get_active_iter(),0)=="Fragment"):
             self.cb_fragment.show()
-            self.la_fragment.show()
+            #self.la_fragment.show()
+            self.hbox_fragments.show()
 
     def on_bu_element_clicked(self, widget, index):
         self.atom_number = context.application.configuration.sketch_quickpicks[index]
@@ -248,9 +251,7 @@ class SketchOptions(GladeWrapper):
         new = self.get_new()
         print new
         if self.doing_fragment:
-            AddFragment = context.application.plugins.get_action("AddFragment")
-            addfragment = AddFragment(new)
-            addfragment.do(position)
+            new.addToModel(position,parent)
             pass  #WOUTER don't wanna implement positioning yet for fragments, lets just try adding a bunch of atoms
         else:
             new.transformation.t[:] = position
@@ -258,20 +259,31 @@ class SketchOptions(GladeWrapper):
             return new
 
     def replace(self, gl_object):
+        print gl_object
+
         if not gl_object.get_fixed():
-            state = gl_object.__getstate__()
-            state.pop("name", None)
-            state.pop("transformation", None)
-            new = self.get_new(state)
-            new.transformation.t[:] = gl_object.transformation.t
-            for reference in gl_object.references[::-1]:
-                if not reference.check_target(new):
-                    return
-            parent = gl_object.parent
-            primitive.Add(new, parent)
-            for reference in gl_object.references[::-1]:
-                reference.set_target(new)
-            primitive.Delete(gl_object)
+            if self.doing_fragment:
+                new = self.get_new()
+                print "replacing atom with fragment"
+                position = gl_object.transformation.t
+                parent = gl_object.parent
+
+                new.addToModel(position,parent)
+                primitive.Delete(gl_object)
+            else:
+                state = gl_object.__getstate__()
+                state.pop("name", None)
+                state.pop("transformation", None)
+                new = self.get_new(state)
+                new.transformation.t[:] = gl_object.transformation.t
+                for reference in gl_object.references[::-1]:
+                    if not reference.check_target(new):
+                        return
+                parent = gl_object.parent
+                primitive.Add(new, parent)
+                for reference in gl_object.references[::-1]:
+                    reference.set_target(new)
+                primitive.Delete(gl_object)
 
     def connect(self, gl_object1, gl_object2):
         try:
