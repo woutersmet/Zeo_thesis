@@ -57,14 +57,10 @@ class Fragment(GLGeometricBase, UserColorMixin):
     info = ModelObjectInfo("plugins/molecular/atom.svg")
     authors = [authors.toon_verstraelen]
 
-    def __init__(self):
-        print "new fragment object created"
-        self.name = 'ammonium'
-        self.transformation = "BOE!"
-
-    def set_name(self,name):
+    def __init__(self,name='ammonium'):
         self.name = name
-
+        print "new fragment object created with name "+self.name
+        self.transformation = "BOE!"
 
     def getTransformation(self):
         print "getting transformation!"
@@ -79,9 +75,37 @@ class Fragment(GLGeometricBase, UserColorMixin):
     transformation = property(getTransformation,
                                 setTransformation)
 
-    def load_fragment(self): #read file from self.name into molecule object
-        pass
+    def get_in_frame(self,position):
 
+        fragmentdir = context.get_share_filename('fragments')
+        filename = fragmentdir+'/'+self.name+'.cml'
+
+        from molmod.io.cml import load_cml
+        molecules = load_cml(filename)
+        molecule = molecules[0] #we only look at first molecule in the list
+
+        #load 'universe' from file trough cml load filter (stolen from models.py > file_open)
+        load_filter = context.application.plugins.get_load_filter('cml')
+
+        #create frame
+        Frame = context.application.plugins.get_node("Frame")
+        self.fragment_frame = Frame(name=self.name)
+
+        #fill frame with molecule
+        load_filter.load_molecule(self.fragment_frame,molecule)
+
+        #rotate frame?
+        rotation = numpy.array([[1,2,0],
+                                [0,0,0],
+                                 [0,0,0]])
+        # self.fragment_frame.transformation.r[:] = rotation
+
+        print self.fragment_frame.transformation.r
+
+        #apply transformation to frame
+        self.fragment_frame.transformation.t[:] = position
+
+        return self.fragment_frame
 
     def addToModel(self,position=[0,0,0],parent=None):
         if parent is None:
@@ -103,6 +127,14 @@ class Fragment(GLGeometricBase, UserColorMixin):
 
         #fill frame with molecule
         load_filter.load_molecule(self.fragment_frame,molecule)
+
+        #rotate frame?
+        rotation = numpy.array([[1,2,0],
+                                [0,0,0],
+                                 [0,0,0]])
+        # self.fragment_frame.transformation.r[:] = rotation
+
+        print self.fragment_frame.transformation.r
 
         #apply transformation to frame
         self.fragment_frame.transformation.t[:] = position

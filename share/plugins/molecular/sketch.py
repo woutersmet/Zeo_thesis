@@ -207,10 +207,12 @@ class SketchOptions(GladeWrapper):
         self.hbox_atoms.hide()
         self.la_current.hide()
         self.hbox_fragments.hide()
+        self.doing_fragment = False
         if(self.object_store.get_value(self.cb_object.get_active_iter(),0)=="Atom"):
             self.hbox_atoms.show()
             self.la_current.show()
         if(self.object_store.get_value(self.cb_object.get_active_iter(),0)=="Fragment"):
+            self.doing_fragment = True
             self.cb_fragment.show()
             #self.la_fragment.show()
             self.hbox_fragments.show()
@@ -227,20 +229,22 @@ class SketchOptions(GladeWrapper):
         else:
             self.cb_bondtype.hide()
 
-    def get_new(self, state={}):
+    def get_new(self,position):
         object_type = self.object_store.get_value(self.cb_object.get_active_iter(), 0)
         print object_type
+        if object_type == "Fragment":   #if it's a 'Fragment', set fragment name to current item in combo box
+            fragment = context.application.plugins.get_node("Fragment")(self.fragment_store.get_value(self.cb_fragment.get_active_iter(),0))
+            fragment.set_name(self.fragment_store.get_value(self.cb_fragment.get_active_iter(),0))
+            new = fragment.get_in_frame(position)
 
-        new = context.application.plugins.get_node(object_type)()
+        else:
+            new = context.application.plugins.get_node(object_type)()
 
-        #if it's an 'Atom', set the atom number to the current atom number?
-        if object_type == "Atom":
-            new.set_number(self.atom_number)
-            new.set_name(periodic[self.atom_number].symbol)
-        #if it's a 'Fragment', set fragment name to current item in combo box
-        if object_type == "Fragment":
-            self.doing_fragment = True
-            new.set_name(self.fragment_store.get_value(self.cb_fragment.get_active_iter(),0))
+            if object_type == "Atom":  #if it's an 'Atom', set the atom number to the current atom number?
+                new.set_number(self.atom_number)
+                new.set_name(periodic[self.atom_number].symbol)
+
+            new.transformation.t[:] = position
 
         return new
 
@@ -248,34 +252,25 @@ class SketchOptions(GladeWrapper):
         print "position:"
         print position
 
-        new = self.get_new()
+        new = self.get_new(position)
         print new
-        if self.doing_fragment:
-            new.addToModel(position,parent)
-            pass  #WOUTER don't wanna implement positioning yet for fragments, lets just try adding a bunch of atoms
-        else:
-            new.transformation.t[:] = position
-            primitive.Add(new, parent)
-            return new
+        primitive.Add(new, parent)
+
 
     def replace(self, gl_object):
         print gl_object
 
         if not gl_object.get_fixed():
             if self.doing_fragment:
-                new = self.get_new()
                 print "replacing atom with fragment"
                 position = gl_object.transformation.t
                 parent = gl_object.parent
-
+                new = self.get_new(position)
                 new.addToModel(position,parent)
                 primitive.Delete(gl_object)
             else:
-                state = gl_object.__getstate__()
-                state.pop("name", None)
-                state.pop("transformation", None)
-                new = self.get_new(state)
-                new.transformation.t[:] = gl_object.transformation.t
+                new = self.get_new(gl_object.transformation.t)
+                # old way: new.transformation.t[:] =
                 for reference in gl_object.references[::-1]:
                     if not reference.check_target(new):
                         return
@@ -286,6 +281,8 @@ class SketchOptions(GladeWrapper):
                 primitive.Delete(gl_object)
 
     def connect(self, gl_object1, gl_object2):
+        print "connecting:"
+        print gl_object1,gl_object2
         try:
             new = context.application.plugins.get_node(
                 self.vector_store.get_value(self.cb_vector.get_active_iter(), 0)

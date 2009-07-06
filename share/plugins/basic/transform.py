@@ -162,6 +162,7 @@ class RotateDialog(ImmediateWithMemory):
         return result
 
     def do(self):
+        print self.parameters.rotation
         primitive.Transform(context.application.cache.node, self.parameters.rotation, after=False)
 
 
